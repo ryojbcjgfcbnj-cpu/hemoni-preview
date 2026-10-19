@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Kimi Code 完成「官网重构」· 和鸣 Hemoni</title>
+  <meta name="description" content="和鸣 Hemoni —— AI 顺手小工具：继续在原来的浏览器和 AI 工具里工作，桌面宠物接住复制的文字、拖入的文件与分享链接；AI 产物与原文并排比对数字和引用，分类归档、随时复用。">
+  <!-- 推送链接预览（钉钉 / 飞书 / 微信抓取） -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Kimi Code 完成「官网重构」· 和鸣 Hemoni">
+  <meta property="og:description" content="AI 顺手小工具 · 打通输入与产物的最后一公里。点击查看任务详情与完整介绍。">
+  <meta name="theme-color" content="#06070d">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237c6bff'/%3E%3Cstop offset='1' stop-color='%2322d3ee'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #06070d;
+      --card: rgba(255,255,255,.035);
+      --border: rgba(255,255,255,.09);
+      --text: #eef0f8;
+      --text-2: #9aa1b5;
+      --text-3: #6b7288;
+      --brand: #6d5cff;
+      --cyan: #22d3ee;
+      --green: #34d399;
+      --orange: #fb923c;
+      --gold: #f5c86b;
+      --red: #f87171;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", "Noto Sans SC", sans-serif;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      /* 轻量背景光晕，纯 CSS 无图 */
+      background-image:
+        radial-gradient(600px 320px at 50% -80px, rgba(109,92,255,.16), transparent 70%),
+        radial-gradient(500px 300px at 90% 30%, rgba(34,211,238,.05), transparent 70%);
+      background-repeat: no-repeat;
+    }
+    .page { max-width: 520px; margin: 0 auto; padding: 20px 18px 48px; }
+
+    /* ===== 顶栏 ===== */
+    .topbar { display: flex; align-items: center; gap: 9px; padding: 6px 2px 18px; }
+    .logo-mark {
+      width: 30px; height: 30px; border-radius: 9px; flex: none;
+      background: linear-gradient(135deg, #7c6bff, #22d3ee);
+      display: grid; place-items: center;
+    }
+    .logo-mark svg { width: 17px; height: 17px; }
+    .topbar b { font-size: 16px; letter-spacing: .5px; }
+    .topbar small { font-size: 10px; color: var(--text-3); letter-spacing: 2px; }
+    .topbar .tag {
+      margin-left: auto; font-size: 11px; color: #b3a7ff;
+      border: 1px solid rgba(109,92,255,.4); background: rgba(109,92,255,.1);
+      padding: 3px 10px; border-radius: 999px;
+    }
+
+    /* ===== 推送详情卡 ===== */
+    .push-card {
+      border-radius: 18px; border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(20,23,40,.85), rgba(11,13,24,.95));
+      overflow: hidden; box-shadow: 0 18px 50px rgba(0,0,0,.45);
+    }
+    .push-head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 16px 18px; border-bottom: 1px solid rgba(255,255,255,.07);
+      background: rgba(52,211,153,.05);
+    }
+    .push-ico {
+      width: 38px; height: 38px; border-radius: 11px; flex: none;
+      background: rgba(52,211,153,.12); border: 1px solid rgba(52,211,153,.4);
+      display: grid; place-items: center; font-size: 18px;
+    }
+    .push-head b { font-size: 15px; display: block; }
+    .push-head span { font-size: 12px; color: var(--text-3); }
+    .push-body { padding: 16px 18px; }
+    .kv { display: flex; gap: 10px; font-size: 13px; padding: 7px 0; border-bottom: 1px dashed rgba(255,255,255,.06); }
+    .kv:last-child { border-bottom: none; }
+    .kv i { font-style: normal; color: var(--text-3); width: 68px; flex: none; }
+    .kv b { font-weight: 600; }
+    .kv .ok { color: var(--green); }
+    .kv .tok { font-family: Consolas, "SF Mono", monospace; color: var(--cyan); }
+    .push-summary {
+      margin-top: 12px; padding: 12px 14px; border-radius: 12px;
+      background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07);
+      font-size: 13px; color: var(--text-2);
+    }
+    .push-summary b { color: var(--text); }
+    .push-foot {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 18px; border-top: 1px solid rgba(255,255,255,.06);
+      font-size: 11.5px; color: var(--text-3);
+    }
+    .push-foot .chips { margin-left: auto; display: flex; gap: 6px; }
+    .push-foot .chips span {
+      font-size: 10.5px; padding: 2px 8px; border-radius: 999px;
+      border: 1px solid rgba(251,146,60,.35); color: var(--orange); background: rgba(251,146,60,.08);
+    }
+
+    .divider { display: flex; align-items: center; gap: 12px; margin: 30px 2px 20px; color: var(--text-3); font-size: 12px; letter-spacing: 2px; }
+    .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,.08); }
+
+    /* ===== 产品介绍 ===== */
+    .intro h1 { font-size: 27px; line-height: 1.3; letter-spacing: -.5px; }
+    .grad {
+      background: linear-gradient(120deg, #b7a5ff 0%, #7dd3fc 55%, #b7a5ff 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .intro p { margin-top: 10px; font-size: 13.5px; color: var(--text-2); }
+    .intro p b { color: var(--text); }
+
+    .hl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+    .hl {
+      border-radius: 14px; border: 1px solid var(--border); background: var(--card);
+      padding: 15px 14px;
+    }
+    .hl .dot-line { display: flex; align-items: center; gap: 7px; margin-bottom: 8px; }
+    .hl .dot-line i { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+    .hl b { font-size: 14px; display: block; }
+    .hl p { font-size: 12px; color: var(--text-2); margin-top: 3px; line-height: 1.55; }
+
+    /* token 对比条（纯 CSS，无动画也直观） */
+    .tok-box {
+      margin-top: 20px; border-radius: 14px; border: 1px solid var(--border);
+      background: var(--card); padding: 16px;
+    }
+    .tok-row { margin-bottom: 13px; }
+    .tok-row:last-child { margin-bottom: 0; }
+    .tok-row .lab { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; }
+    .tok-row .lab b { font-family: Consolas, "SF Mono", monospace; }
+    .tok-row.bad .lab { color: #fca5a5; }
+    .tok-row.good .lab { color: #6ee7b7; }
+    .bar { height: 10px; border-radius: 6px; }
+    .bar.bad { width: 100%; background: linear-gradient(90deg, #7f1d1d, #ef4444); }
+    .bar.good { width: 7%; background: linear-gradient(90deg, #065f46, #10b981); }
+
+    /* ===== CTA ===== */
+    .cta { margin-top: 26px; display: flex; flex-direction: column; gap: 11px; }
+    .btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 20px; border-radius: 14px; font-size: 15px; font-weight: 600;
+      text-decoration: none; transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .btn:active { transform: scale(.98); }
+    .btn-primary {
+      background: linear-gradient(135deg, #7c6bff, #5a8bff); color: #fff;
+      box-shadow: 0 6px 24px rgba(109,92,255,.4);
+    }
+    .btn-ghost {
+      background: rgba(255,255,255,.06); color: var(--text);
+      border: 1px solid rgba(255,255,255,.14); font-size: 14px;
+    }
+
+    .foot { margin-top: 30px; text-align: center; font-size: 11px; color: var(--text-3); line-height: 1.8; }
+    .foot b { color: var(--text-2); }
+
+    @media (max-width: 380px) {
+      .hl-grid { grid-template-columns: 1fr; }
+      .kv i { width: 58px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- 顶栏 -->
+    <div class="topbar">
+      <span class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/>
+        </svg>
+      </span>
+      <b>和鸣</b> <small>HEMONI</small>
+      <span class="tag">任务动态</span>
+    </div>
+
+    <!-- 推送详情 -->
+    <div class="push-card">
+      <div class="push-head">
+        <span class="push-ico">✓</span>
+        <div>
+          <b>Kimi Code 完成「官网重构」</b>
+          <span>今天 10:27 · 来自和鸣 · 桌面宠物</span>
+        </div>
+      </div>
+      <div class="push-body">
+        <div class="kv"><i>执行 Agent</i><b>Kimi Code</b></div>
+        <div class="kv"><i>工作目录</i><b>work\hemoni-site</b></div>
+        <div class="kv"><i>使用模型</i><b>Claude Sonnet 4.5</b></div>
+        <div class="kv"><i>累计消耗</i><span class="tok">12.4k tokens</span></div>
+        <div class="kv"><i>本轮用时</i><b>12 分 40 秒</b></div>
+        <div class="kv"><i>执行结果</i><b class="ok">✓ 成功 · 无失败步骤</b></div>
+        <div class="push-summary">
+          <b>摘要：</b>完成首页、核心能力、资料比对卡、文件站四大板块共 11 个锚点，桌面端与移动端均已验证。
+        </div>
+      </div>
+      <div class="push-foot">
+        本消息由和鸣自动推送 · 按状态跃迁去重
+        <span class="chips"><span>飞书</span><span>钉钉</span></span>
+      </div>
+    </div>
+
+    <div class="divider">这条推送背后的产品</div>
+
+    <!-- 产品介绍 -->
+    <div class="intro">
+      <h1>AI 顺手小工具<br><span class="grad">打通最后一公里</span></h1>
+      <p>
+        继续在原来的浏览器、AI 工具里工作。<b>和鸣 Hemoni</b> 的桌面宠物接住<b>复制的文字、拖入的文件、分享链接</b>，
+        AI 的回答和产物<b>排版、核对、归档、复用</b>——数字与引用还能回到原文。
+      </p>
+
+      <div class="hl-grid">
+        <div class="hl">
+          <div class="dot-line"><i style="background:#a78bfa"></i><i style="background:var(--orange)"></i></div>
+          <b>桌面宠物入口</b>
+          <p>拖入文字文件先预览分类，双击语音聊天，状态动画实时提醒</p>
+        </div>
+        <div class="hl">
+          <div class="dot-line"><i style="background:var(--gold)"></i><i style="background:var(--red)"></i></div>
+          <b>资料比对卡</b>
+          <p>AI 产物与原文并排比对，数字引用逐项核对、证据可定位</p>
+        </div>
+        <div class="hl">
+          <div class="dot-line"><i style="background:var(--green)"></i></div>
+          <b>文件站 AI 整理</b>
+          <p>AI 起名、摘要标签、原件保存；对话与产物一键三分类归档</p>
+        </div>
+        <div class="hl">
+          <div class="dot-line"><i style="background:var(--gold)"></i><i style="background:var(--orange)"></i><i style="background:var(--green)"></i></div>
+          <b>Agent 状态与额度</b>
+          <p>Codex / Kimi Code / DSH / WorkBuddy，状态、步骤、额度、token</p>
+        </div>
+        <div class="hl">
+          <div class="dot-line"><i style="background:#60a5fa"></i><i style="background:var(--cyan)"></i></div>
+          <b>智能找文件</b>
+          <p>自然语言 + 语音，搜文件站也搜电脑文件夹，深度 AI 逐块判断</p>
+        </div>
+        <div class="hl">
+          <div class="dot-line"><i style="background:var(--green)"></i></div>
+          <b>隐私与受管调用</b>
+          <p>公开 / 内部 / 机密分级，外发统一检查，敏感内容提醒脱敏</p>
+        </div>
+      </div>
+
+      <div class="tok-box">
+        <div class="tok-row good">
+          <div class="lab"><span>按需读资料 · 估算与实际上报分列</span><b>同任务对照验证</b></div>
+          <div class="bar good" style="width:34%"></div>
+        </div>
+        <div class="tok-row bad">
+          <div class="lab"><span>隐私分级 · 公开 / 内部 / 机密随行</span><b>机密外发需授权</b></div>
+          <div class="bar bad"></div>
+        </div>
+      </div>
+
+      <div class="cta">
+        <a class="btn btn-primary" href="index.html">打开完整官网 →</a>
+        <a class="btn btn-ghost" href="index.html#cta">下载 Windows 版 · 免费</a>
+      </div>
+    </div>
+
+    <div class="foot">
+      <b>和鸣 Hemoni</b> · AI 顺手小工具 · 打通最后一公里<br>
+      © 2026 和鸣 · 本页为任务推送详情页 · 各模型与工具名称归其所有者
+    </div>
+
+  </div>
+</body>
+</html>
