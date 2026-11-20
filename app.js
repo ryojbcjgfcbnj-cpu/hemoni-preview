@@ -1,4 +1,4 @@
-/* 和鸣 Hemoni · 官网交互脚本 */
+/* 较真一下 Jiaozhen · 官网交互脚本 */
 (function () {
   "use strict";
 
