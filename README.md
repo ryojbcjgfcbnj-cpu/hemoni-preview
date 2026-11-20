@@ -6,7 +6,19 @@
 
 > 本仓库目前是产品介绍与交互演示网站，不包含 Electron 桌面端完整源码。页面中的数据和交互用于演示，不连接真实核查、模型或社区服务。桌面软件能力与展示页实现请分别阅读。
 
-[在线演示](https://ryojbcjgfcbnj-cpu.github.io/hemoni-preview/) · [技术架构](docs/ARCHITECTURE.md) · [使用说明](docs/USAGE.md) · [常见问题](docs/FAQ.md) · [GitHub 入门](docs/GITHUB_GUIDE.md)
+[在线交互 Demo](https://ryojbcjgfcbnj-cpu.github.io/hemoni-preview/demo.html) · [产品介绍](https://ryojbcjgfcbnj-cpu.github.io/hemoni-preview/) · [技术架构](docs/ARCHITECTURE.md) · [使用说明](docs/USAGE.md) · [常见问题](docs/FAQ.md) · [GitHub 入门](docs/GITHUB_GUIDE.md)
+
+## 直接体验
+
+打开 [在线工作台](https://ryojbcjgfcbnj-cpu.github.io/hemoni-preview/demo.html)，无需下载、登录或填写 API Key。
+
+- 运行三条预设字段规则，定位到原始合同条款。
+- 编辑并保存待复核记录，或确认应用修订；版本变化时拦截写入。
+- 查看前后稿、引文和历史，重开页面后继续体验。
+- 从受支持的修订生成候选判断，用同值错字段案例试跑。
+- 在文件站查看材料关联，点击生成模拟 Token 曲线和异常提示。
+
+案例全部虚构，检查为浏览器本地的预设规则，不调用 AI。记录仅保存在当前浏览器；「重新体验」会清空演示记录。演示不支持通用金融语义核查或读取真实会话日志，请勿输入私人材料。
 
 ## 为什么做这个项目
 
@@ -71,6 +83,9 @@ AI 输出可能出现数字正确但口径错误、引用无法定位、原稿�
 ├── index.html          # 产品介绍与交互演示
 ├── styles.css          # 页面样式
 ├── app.js              # 页面交互
+├── demo.html           # 免安装在线工作台
+├── demo.css            # 在线工作台样式
+├── demo.js             # 本地规则、修订、历史和模拟监控
 ├── push.html           # 独立的历史消息演示页
 ├── docs/               # 架构、使用、FAQ 和 GitHub 入门
 ├── .github/            # 问题反馈与 PR 模板
