@@ -7,42 +7,66 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
   <title>在线工作台 · 较真一下</title>
   <link rel="stylesheet" href="demo.css">
-  <script defer src="demo.js"></script>
+  <link rel="stylesheet" href="workbench-theme.css?v=20261121">
+  <script defer src="demo.js?v=20261121"></script>
 </head>
 <body>
+  <div class="app-window">
+  <div class="windowbar"><span>◇ &nbsp; 较真一下</span><span class="local-mode" title="预置示例与本地规则，不连接真实模型或社区">示例模式</span></div>
   <aside class="sidebar">
-    <a class="brand" href="index.html"><span class="brand-mark">较</span><span>较真一下<small>AI 内容核查工作台</small></span></a>
-    <span class="nav-caption">工作空间</span>
+    <button class="brand" id="brand-home"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 4 6v5c0 5 8 10 8 10s8-5 8-10V6Z"/><path d="m8 11 3 3 5-6"/></svg></span><span>较真<span class="brand-blue">一下</span><small>您的智能核对助手</small></span></button>
+    <span class="nav-caption">工作区</span>
     <nav aria-label="工作空间">
-      <button class="nav-item active" data-view="work" aria-current="page"><span>▤</span>较真工作台</button>
-      <button class="nav-item" data-view="files"><span>▱</span>文件站</button>
-      <button class="nav-item" data-view="history"><span>◷</span>核查记录<span id="history-count" class="count">0</span></button>
-      <button class="nav-item" data-view="tokens"><span>⌁</span>Token 监控</button>
+      <button class="nav-item active" data-view="work" aria-current="page"><span><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>较真工作台</button>
+      <button class="nav-item" data-view="files"><span><svg viewBox="0 0 24 24"><path d="M3 7V5h7l2 2h9v13H3Z"/><path d="M3 10h18"/></svg></span>文件站</button>
+      <button class="nav-item" data-view="history"><span><svg viewBox="0 0 24 24"><path d="M3 11a9 9 0 1 1 2 7M3 4v7h7M12 7v5l3 2"/></svg></span>历史核查记录<span id="history-count" class="count">0</span></button>
+      <span class="nav-caption community-caption">社区</span>
+      <button class="nav-item" data-view="square"><span><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M17 14a5 5 0 0 1 4 5v1"/></svg></span>较真广场</button>
+      <button class="nav-item" data-view="tokens"><span><svg viewBox="0 0 24 24"><path d="M2 12h5l3-8 4 16 3-8h5"/></svg></span>Token 监控</button>
     </nav>
-    <div class="sidebar-foot"><div class="pet" aria-hidden="true">●ᴗ●</div><strong>真真陪你一起核对</strong><p>从一个数字，找到它的依据。</p><a href="index.html">项目介绍</a></div>
+    <div class="sidebar-foot"><span class="user-avatar">访</span><div><strong>体验用户</strong><p>本地记录</p></div></div>
   </aside>
   <main>
-    <header class="topbar"><span>个人工作空间 <span class="slash">/</span> 在线体验</span><span class="demo-badge">虚构案例 · 本地演示</span></header>
     <div class="page">
       <section id="view-work">
-        <div class="page-heading"><div><div class="eyebrow">EVIDENCE BEFORE CONFIDENCE</div><h1>每一个判断，都有据可查。</h1><p>对照原始材料，发现口径问题，把修改留下来。</p></div><button id="reset" class="quiet">重新体验</button></div>
-        <div class="notice"><span>体验说明</span>这里运行真实的浏览器交互与预设规则，不调用 AI。案例均为虚构，数据仅保存在当前浏览器，请勿输入私人材料。</div>
-        <div class="workflow" aria-label="体验流程"><span class="step active">选择案例</span><i></i><span class="step">核对与定位</span><i></i><span class="step">记录修订</span><i></i><span class="step">提炼判断</span></div>
+        <div class="task-toolbar"><div><span class="task-symbol">▤</span><input id="task-title" aria-label="任务名称" maxlength="80" value="未命名核查任务"></div><div class="task-toolbar-actions"><button id="reset" class="secondary">重置示例</button><button id="save-task" class="primary">保存</button><span id="task-saved" class="save-status">未保存</span></div></div>
+        <div id="task-config">
+          <div class="setup-heading"><h1>开始一次新的事实核对</h1><p>添加材料，选择你关注的维度和场景。</p></div>
+          <div class="upload-grid">
+            <article class="upload-zone"><div class="upload-icon">▤</div><h2>添加原始材料</h2><p>用作核对依据的原始文件或条款</p><button id="preview-source" class="file-pill">▧ &nbsp; 虚构交易条款摘录.pdf <span>查看</span></button></article>
+            <article class="upload-zone"><div class="upload-icon violet">▥</div><h2>添加待查材料</h2><p>需要核查的 AI 回答或专业内容</p><button id="preview-answer" class="file-pill">▧ &nbsp; AI 回答草稿.txt <span>编辑</span></button></article>
+          </div>
+          <div class="config-label"><h2>示例材料</h2><span>预置材料，可直接开始</span></div>
         <div class="case-toolbar"><div><label for="case-select">当前案例</label><select id="case-select"><option value="acquisition">并购条款 · 补偿与奖励口径</option><option value="same">同为 75% · 数字相同，字段不同</option></select></div><span id="version-label" class="muted"></span></div>
+          <div class="config-label"><h2>核查维度</h2><button id="select-dimensions" class="text-button">全选</button></div>
+          <div class="dimension-options"><label class="dimension-card"><input type="checkbox" value="numeric" checked><span><strong>数字与单位</strong><small>核对奖励比例与金额上限</small></span><span class="dimension-symbol">#</span></label><label class="dimension-card"><input type="checkbox" value="scope" checked><span><strong>业务口径</strong><small>区分补偿触发线与奖励比例</small></span><span class="dimension-symbol">◎</span></label><label class="dimension-card"><input type="checkbox" value="evidence" checked><span><strong>证据引用</strong><small>核对当前条款依据与引用</small></span><span class="dimension-symbol">❞</span></label></div>
+          <div class="config-label"><h2>任务场景</h2><span>可选</span></div>
+          <div class="scenario-options"><button class="scenario-option selected" aria-pressed="true">▥ <span>投资研究</span></button><button class="scenario-option" aria-pressed="false">▱ <span>融资尽调</span></button><button class="scenario-option" aria-pressed="false">⚖ <span>法律合规</span></button><button class="scenario-option" aria-pressed="false">▧ <span>科研写作</span></button></div>
+          <label class="requirements-label" for="task-requirements">补充核查要求 <span>选填，记录本次复核关注点</span></label><textarea id="task-requirements" maxlength="1000" placeholder="例如：关注补偿条款的适用条件，以及奖励比例是否混用。"></textarea>
+          <div class="start-action"><span id="config-error" role="alert"></span><button id="start-check" class="primary">开始核查</button></div>
+        </div>
+        <div id="review-workspace" hidden>
+        <div class="review-toolbar"><div><button id="back-config" class="quiet">返回任务设置</button><h1>核查报告</h1></div><span id="report-state" class="tag neutral">待复核</span></div>
+        <div class="workflow" aria-label="核查流程"><span class="step active">核对与定位</span><i></i><span class="step">记录修订</span><i></i><span class="step">复核确认</span><i></i><span class="step">提炼判断</span></div>
         <div class="workspace">
           <article class="panel source-panel"><div class="panel-head"><h2><span class="doc-icon">原</span>原始材料</h2><span class="tag">已解析</span></div><div class="doc-meta">虚构交易条款摘录.pdf <span>第 3 页 · 3 条证据</span></div><div id="source"></div><div class="source-footer">证据绑定到本案例的具体条款，点击问题卡片可定位。</div></article>
           <article class="panel answer-panel"><div class="panel-head"><h2><span class="doc-icon purple">AI</span>待查回答</h2><span class="tag neutral">可直接编辑</span></div><label class="sr-only" for="answer">待查回答正文</label><textarea id="answer" spellcheck="false"></textarea><div class="answer-footer"><span>编辑正文后，请重新核查。</span><button id="run" class="primary">较真一下</button></div></article>
         </div>
         <section class="results-section"><div class="section-heading"><h2>核查结果 <span id="result-count"></span></h2><span id="coverage" class="muted">等待开始</span></div><div id="results" class="empty-state"><span class="empty-symbol">◎</span><h3>数字一致，还要口径一致</h3><p>点击「较真一下」，看看回答引用了哪条合同依据。</p></div></section>
         <section id="knowledge" class="panel knowledge" hidden><div class="panel-head"><h2>从这次修改，提炼一条判断</h2><span class="tag">候选规则</span></div><p id="rule-text"></p><p class="muted">来源：本次已应用修订与对应条款。单一案例仍需专家确认和跨案例验证。</p><div class="trial"><div><strong>换一个案例试跑</strong><p>让两个比例都为 75%，只改变引用字段。</p></div><label>答案实际引用的字段<select id="trial-field"><option value="threshold">收入补偿触发线</option><option value="reward">超额奖励比例</option><option value="unknown">无法确认字段</option></select></label><button id="trial-run" class="secondary">试跑规则</button></div><p id="trial-result" role="status"></p></section>
+        </div>
       </section>
-      <section id="view-files" hidden><div class="page-heading"><div><div class="eyebrow">YOUR MATERIALS</div><h1>文件站</h1><p>让材料、回答和核查记录关联起来。</p></div></div><div id="file-list"></div></section>
-      <section id="view-history" hidden><div class="page-heading"><div><div class="eyebrow">A TRACEABLE DECISION</div><h1>核查记录</h1><p>修改前后、依据与判断，都在这里。</p></div><button id="export" class="secondary">导出 JSONL</button></div><div id="history-list"></div></section>
-      <section id="view-tokens" hidden><div class="page-heading"><div><div class="eyebrow">OBSERVE YOUR AI WORK</div><h1>Token 监控</h1><p>用一段模拟会话，体验消耗速率与异常提示。</p></div><button id="simulate" class="primary">模拟一次调用</button></div><div class="notice"><span>模拟数据</span>不读取真实日志、不调用模型、不产生模型费用；此图用于体验监控界面。</div><div class="metrics"><div class="panel"><span>累计 Token</span><strong id="token-total">0</strong></div><div class="panel"><span>模拟调用</span><strong id="token-calls">0</strong></div><div class="panel"><span>当前速率</span><strong id="token-rate">0 <small>Token/分</small></strong></div></div><div class="panel chart-panel"><div class="section-heading"><h2>消耗速率</h2><span class="muted">每次点击增加一个模拟分钟</span></div><svg id="chart" viewBox="0 0 800 200" role="img" aria-label="模拟 Token 消耗速率曲线"></svg><p id="token-notice" role="status">点击按钮，生成第一条模拟调用。</p></div></section>
+      <section id="view-files" hidden><div class="page-heading"><div><h1>文件站</h1></div></div><div id="file-list"></div></section>
+      <section id="view-history" hidden><div class="page-heading"><div><h1>历史核查记录</h1></div><button id="export" class="secondary">导出 JSONL</button></div><div id="history-list"></div></section>
+      <section id="view-square" hidden><header class="square-header"><div class="square-tabs"><button class="selected" id="square-tab">较真广场</button><button id="experts-tab">找行家</button></div><button id="new-post" class="primary">＋ 发起求助</button></header><div id="square-content"><div class="square-grid"><div><div class="square-banner"><div><span>待核问题</span><strong id="square-post-count">3</strong></div><div><span>参与讨论</span><strong id="square-reply-count">3</strong></div><div><span>案例类型</span><strong>3 类</strong></div><span class="banner-watermark">◇</span></div><div id="post-list"></div></div><aside class="square-side"><article class="panel"><h3>热门标签</h3><button data-tag="all">全部</button><button data-tag="口径核对"># 口径核对</button><button data-tag="引用核查"># 引用核查</button><button data-tag="表述限定"># 表述限定</button></article><article class="panel"><h3>本周关注</h3><p>01 &nbsp; 数字相同，引用字段不同</p><p>02 &nbsp; 引用存在，是否支持结论</p><p>03 &nbsp; 条件与例外的遗漏</p></article></aside></div></div><div id="experts-content" hidden></div></section>
+      <section id="view-tokens" hidden><div class="page-heading"><div><h1>Token 监控</h1></div><button id="simulate" class="primary">模拟一次调用</button></div><div class="metrics"><div class="panel"><span>累计 Token</span><strong id="token-total">0</strong></div><div class="panel"><span>模拟调用</span><strong id="token-calls">0</strong></div><div class="panel"><span>当前速率</span><strong id="token-rate">0 <small>Token/分</small></strong></div></div><div class="panel chart-panel"><div class="section-heading"><h2>消耗速率</h2><span class="muted">模拟会话</span></div><svg id="chart" viewBox="0 0 800 200" role="img" aria-label="模拟 Token 消耗速率曲线"></svg><p id="token-notice" role="status">点击按钮，生成第一条模拟调用。</p></div></section>
       <p id="status" class="global-status" role="status" aria-live="polite"></p>
-      <footer>较真一下 · 在线交互 Demo <span>无需安装，无需登录</span></footer>
     </div>
   </main>
+  </div>
+  <dialog id="material-dialog" aria-labelledby="material-title"><div class="dialog-heading"><h2 id="material-title">原始材料</h2><button id="close-material" class="quiet">关闭</button></div><div id="material-body"></div></dialog>
+  <dialog id="post-dialog" aria-labelledby="post-title"><div class="dialog-heading"><h2 id="post-title">核查讨论</h2><button id="close-post" class="quiet">关闭</button></div><div id="post-detail"></div></dialog>
+  <dialog id="compose-dialog" aria-labelledby="compose-title"><form id="compose-form"><div class="dialog-heading"><h2 id="compose-title">发起求助</h2><button id="close-compose" type="button" class="quiet">关闭</button></div><label>标题<input id="compose-heading" required maxlength="100" placeholder="你希望核对什么问题？"></label><label>领域<select id="compose-tag"><option>口径核对</option><option>引用核查</option><option>表述限定</option></select></label><label>问题描述<textarea id="compose-body" required maxlength="1000" placeholder="描述判断、依据和需要核对的地方"></textarea></label><div class="dialog-actions"><button class="primary" type="submit">保存到本地广场</button></div></form></dialog>
   <dialog id="revision-dialog" aria-labelledby="revision-title">
     <form id="revision-form"><div class="dialog-heading"><div><span class="eyebrow">REVIEW & REVISE</span><h2 id="revision-title">记录核查修订</h2></div><button id="close-dialog" type="button" class="quiet" aria-label="关闭修订窗口">关闭</button></div><div class="revision-grid"><label>修改前<textarea id="revision-before" readonly></textarea></label><label>建议改稿<textarea id="revision-after" required maxlength="1000"></textarea></label></div><label>关联证据<blockquote id="revision-quote"></blockquote></label><div class="revision-grid"><label>修改类型<select id="revision-kind"><option>口径澄清</option><option>事实修正</option><option>表达调整</option></select></label><label>核查理由<input id="revision-reason" maxlength="300" value="补偿判断应引用补偿触发线，奖励比例用于另一个计算。"></label></div><p class="muted">保存待复核保留原文；确认应用前会校验版本与原文快照。</p><p id="revision-error" role="alert"></p><div class="dialog-actions"><button id="save-pending" type="button" class="secondary">保存待复核</button><button id="apply" type="submit" class="primary">确认并应用</button></div></form>
   </dialog>
