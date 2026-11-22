@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+data/
+run/
+lexical-run/
+reproduced-run/
+*.npz

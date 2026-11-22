@@ -1,0 +1,103 @@
+{
+  "splits": {
+    "train": {
+      "queries": 48,
+      "documents": 24
+    },
+    "validation": {
+      "queries": 12,
+      "documents": 6
+    },
+    "test": {
+      "queries": 24,
+      "documents": 12
+    },
+    "source_check": {
+      "queries": 2,
+      "documents": 1
+    }
+  },
+  "benchmark_test": {
+    "bm25": {
+      "top1_correct": 21,
+      "queries": 24,
+      "chose_edited_away_evidence": 3,
+      "both_correct": 10,
+      "documents": 12,
+      "mrr": 0.9375,
+      "hard_pair_strict_wins": 21
+    },
+    "easy_only": {
+      "top1_correct": 21,
+      "queries": 24,
+      "chose_edited_away_evidence": 3,
+      "both_correct": 10,
+      "documents": 12,
+      "mrr": 0.9375,
+      "hard_pair_strict_wins": 21
+    },
+    "edit_hard": {
+      "top1_correct": 21,
+      "queries": 24,
+      "chose_edited_away_evidence": 3,
+      "both_correct": 10,
+      "documents": 12,
+      "mrr": 0.9375,
+      "hard_pair_strict_wins": 21
+    },
+    "qwen_easy_only": {
+      "top1_correct": 17,
+      "queries": 24,
+      "chose_edited_away_evidence": 7,
+      "both_correct": 5,
+      "documents": 12,
+      "mrr": 0.8472222222222222,
+      "hard_pair_strict_wins": 17
+    },
+    "qwen_edit_hard": {
+      "top1_correct": 21,
+      "queries": 24,
+      "chose_edited_away_evidence": 3,
+      "both_correct": 9,
+      "documents": 12,
+      "mrr": 0.9375,
+      "hard_pair_strict_wins": 21
+    },
+    "llm": {
+      "top1_correct": 23,
+      "queries": 24,
+      "chose_edited_away_evidence": 1,
+      "both_correct": 11,
+      "documents": 12,
+      "mrr": null,
+      "hard_pair_strict_wins": null
+    }
+  },
+  "common_regularization_ablation": {
+    "regularization": 0.002,
+    "benchmark_test": {
+      "qwen_easy_only": {
+        "top1_correct": 18,
+        "queries": 24,
+        "chose_edited_away_evidence": 6,
+        "both_correct": 6,
+        "documents": 12,
+        "mrr": 0.875,
+        "hard_pair_strict_wins": 18
+      },
+      "qwen_edit_hard": {
+        "top1_correct": 21,
+        "queries": 24,
+        "chose_edited_away_evidence": 3,
+        "both_correct": 9,
+        "documents": 12,
+        "mrr": 0.9375,
+        "hard_pair_strict_wins": 21
+      }
+    }
+  },
+  "checks": {
+    "finite_difference_gradient": "passed",
+    "document_split": "passed"
+  }
+}
